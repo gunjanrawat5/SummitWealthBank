@@ -29,4 +29,13 @@ public class AccountService {
     public List<Account> getUserAccounts(Long userId) {
         return accountRepository.findByUserId(userId);
     }
+
+    public Account getAccount(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found: " + id));
+    }
+
+    public void saveAccount(Account account) {
+        accountRepository.save(account);
+    }
 }
