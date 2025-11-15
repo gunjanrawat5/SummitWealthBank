@@ -19,7 +19,7 @@ public class AccountService {
         Account account = Account.builder()
                 .userId(request.getUserId())
                 .type(request.getType())
-                .balance(BigDecimal.ZERO)
+                .balance(request.getInitialDeposit())
                 .frozen(false)
                 .build();
 
