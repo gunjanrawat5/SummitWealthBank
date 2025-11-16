@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function OpenAccount() {
-    const [userId, setUserId] = useState("");
+    const [username, setUsername] = useState("");
     const [type, setType] = useState("CHECKING");
     const [initialDeposit, setInitialDeposit] = useState("");
     const [response, setResponse] = useState(null);
@@ -11,9 +11,9 @@ export default function OpenAccount() {
         e.preventDefault();
 
         const payload = {
-            userId: parseInt(userId),
-            type,
-            initialDeposit: parseFloat(initialDeposit),
+            username: username,
+            type: type,
+            initialDeposit: parseFloat(initialDeposit)
         };
 
         try {
@@ -24,22 +24,22 @@ export default function OpenAccount() {
             });
 
             if (!res.ok) {
-                throw new Error(`Error: ${res.status}`);
+                const msg = await res.text();
+                throw new Error(msg || `Error: ${res.status}`);
             }
 
             const data = await res.json();
             setResponse(data);
-            setError(null); // clear any old error
+            setError(null);
         } catch (err) {
             setError(err.message || "Something went wrong");
-            setResponse(null); // clear old response
+            setResponse(null);
         }
     };
 
     const isFormValid =
-        userId.trim() !== "" &&
+        username.trim() !== "" &&
         initialDeposit.trim() !== "" &&
-        !isNaN(userId) &&
         !isNaN(initialDeposit);
 
     return (
@@ -48,12 +48,12 @@ export default function OpenAccount() {
 
             <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
-                    <label>User ID</label>
+                    <label>Username</label>
                     <input
-                        type="number"
+                        type="text"
                         className="w-full border px-3 py-2 rounded"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                     />
                 </div>

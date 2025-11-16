@@ -24,8 +24,15 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private String role = "USER"; // default to USER
+    private String role;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;
+
+    @PrePersist
+    public void assignDefaultRole() {
+        if (this.role == null) {
+            this.role = "USER";
+        }
+    }
 }
