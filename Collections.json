@@ -1,0 +1,135 @@
+{
+  "info": {
+    "_postman_id": "c34d43a2-2025-11ee-b6fa-1234567890ab",
+    "name": "Summit Wealth Bank API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Open Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"userId\": 1, \"type\": \"CHECKING\", \"initialDeposit\": 1000.00}"
+        },
+        "url": {"raw": "http://localhost:8080/api/accounts/open", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "accounts", "open"]}
+      }
+    },
+    {
+      "name": "Get Accounts",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:8080/api/accounts/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "accounts", "1"]}
+      }
+    },
+    {
+      "name": "Freeze Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"accountId\": 1}"
+        },
+        "url": {"raw": "http://localhost:8080/api/admin/freeze", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "admin", "freeze"]}
+      }
+    },
+    {
+      "name": "Unfreeze Account",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"accountId\": 1}"
+        },
+        "url": {"raw": "http://localhost:8080/api/admin/unfreeze", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "admin", "unfreeze"]}
+      }
+    },
+    {
+      "name": "Transfer Money",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"fromAccountId\": 1, \"toAccountId\": 2, \"amount\": 100.00}"
+        },
+        "url": {"raw": "http://localhost:8080/api/transfer", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "transfer"]}
+      }
+    },
+    {
+      "name": "Generate Card Feed",
+      "request": {
+        "method": "POST",
+        "url": {"raw": "http://localhost:8080/api/card-feed/generate/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "card-feed", "generate", "1"]}
+      }
+    },
+    {
+      "name": "Get Card Feed",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:8080/api/card-feed/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "card-feed", "1"]}
+      }
+    },
+    {
+      "name": "Set Risk Score",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"accountId\": 1, \"riskScore\": 3}"
+        },
+        "url": {"raw": "http://localhost:8080/api/wealth/risk", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "wealth", "risk"]}
+      }
+    },
+    {
+      "name": "Buy Investments",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"accountId\": 1, \"amount\": 200.00}"
+        },
+        "url": {"raw": "http://localhost:8080/api/wealth/buy", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "wealth", "buy"]}
+      }
+    },
+    {
+      "name": "Sell Investments",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"accountId\": 1, \"amount\": 100.00}"
+        },
+        "url": {"raw": "http://localhost:8080/api/wealth/sell", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "wealth", "sell"]}
+      }
+    },
+    {
+      "name": "Get Portfolio Value",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:8080/api/wealth/value/1", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "wealth", "value", "1"]}
+      }
+    }
+  ]
+}
