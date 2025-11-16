@@ -43,7 +43,7 @@ The frontend is under development with basic wiring planned, and security featur
 - Java 21
 - Spring Boot (REST API)
 - Spring Data JPA / Hibernate
-- MySQL / H2 (for development)
+- Postgres / H2 (for development)
 - Maven
 - JUnit5 (planned for unit testing)
 
