@@ -128,8 +128,8 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
+            {/* Remember Me */}
+            <div className="flex items-center">
               <label className="flex items-center">
                 <input
                   type="checkbox"
@@ -137,9 +137,6 @@ const Login = () => {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <a href="#" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                Forgot password?
-              </a>
             </div>
 
             {/* Error Message */}
@@ -162,13 +159,6 @@ const Login = () => {
               )}
             </button>
           </form>
-
-          {/* Demo Note */}
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700 text-center">
-              Demo: Use any email/password to login
-            </p>
-          </div>
 
           {/* Sign Up Link */}
           <div className="mt-6 text-center">
