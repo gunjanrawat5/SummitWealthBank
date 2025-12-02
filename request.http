@@ -1,0 +1,314 @@
+
+### Base URL: http://localhost:8080
+
+### Variables
+@baseUrl = http://localhost:8080
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBzdW1taXR3ZWFsdGguY29tIiwiaWF0IjoxNzY0Njk0MTQxLCJleHAiOjE3NjQ3ODA1NDF9.cCSaTJPd0lwLxcejfiauSLTFY3b4PWtF4g7FtFptgIo
+
+###############################################################################
+### AUTHENTICATION ENDPOINTS
+###############################################################################
+
+### Register a new user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "phone": "1234567890"
+}
+
+### Login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@summitwealth.com",
+  "password": "admin123"
+}
+
+### Admin Login
+POST {{baseUrl}}/api/auth/admin/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+###############################################################################
+### ACCOUNT ENDPOINTS
+###############################################################################
+
+### Get My Accounts (Requires Authentication)
+GET {{baseUrl}}/api/accounts
+Authorization: Bearer {{token}}
+
+### Open New Account
+POST {{baseUrl}}/api/accounts/open
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "type": "CHECKING",
+  "initialDeposit": 1000.00
+}
+
+### Open Savings Account
+POST {{baseUrl}}/api/accounts/open
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "type": "SAVINGS",
+  "initialDeposit": 5000.00
+}
+
+### Get User Accounts by User ID
+GET {{baseUrl}}/api/accounts/user/1
+Authorization: Bearer {{token}}
+
+### Get Accounts by Email
+GET {{baseUrl}}/api/accounts/by-email/user@example.com
+Authorization: Bearer {{token}}
+
+###############################################################################
+### TRANSFER & TRANSACTION ENDPOINTS
+###############################################################################
+
+### Transfer Money Between Accounts
+POST {{baseUrl}}/api/transfer
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fromAccountId": 1,
+  "toAccountId": 2,
+  "amount": 500.00,
+  "description": "Monthly savings transfer"
+}
+
+### Get Transactions for Specific Account
+GET {{baseUrl}}/api/transfer/1
+Authorization: Bearer {{token}}
+
+### Get Recent Transactions (All User Accounts)
+GET {{baseUrl}}/api/transactions/recent?limit=10
+Authorization: Bearer {{token}}
+
+### Get Recent Transactions (Custom Limit)
+GET {{baseUrl}}/api/transactions/recent?limit=50
+Authorization: Bearer {{token}}
+
+###############################################################################
+### CARD FEED ENDPOINTS
+###############################################################################
+
+### Get All Card Transactions (Current User)
+GET {{baseUrl}}/api/card-feed
+Authorization: Bearer {{token}}
+
+### Generate Card Transaction for Account
+POST {{baseUrl}}/api/card-feed/generate/1
+Authorization: Bearer {{token}}
+
+### Get Card Transactions by Account ID
+GET {{baseUrl}}/api/card-feed/1
+Authorization: Bearer {{token}}
+
+###############################################################################
+### WEALTH / INVESTMENT ENDPOINTS
+###############################################################################
+
+### Get My Wealth Portfolios
+GET {{baseUrl}}/api/wealth
+Authorization: Bearer {{token}}
+
+### Set Risk Score for Portfolio
+POST {{baseUrl}}/api/wealth/risk
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "riskScore": 3
+}
+
+### Buy Investment
+POST {{baseUrl}}/api/wealth/buy
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 1000.00
+}
+
+### Sell Investment
+POST {{baseUrl}}/api/wealth/sell
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 500.00
+}
+
+### Invest (Alternative Buy Endpoint)
+POST {{baseUrl}}/api/wealth/invest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 2000.00
+}
+
+### Get Portfolio Value
+GET {{baseUrl}}/api/wealth/value/1
+Authorization: Bearer {{token}}
+
+###############################################################################
+### USER/SETTINGS ENDPOINTS
+###############################################################################
+
+### Get User Profile
+GET {{baseUrl}}/api/user/profile
+Authorization: Bearer {{token}}
+
+### Change Password
+PUT {{baseUrl}}/api/user/change-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "password123",
+  "newPassword": "newpassword123"
+}
+
+### Update Phone Number
+PUT {{baseUrl}}/api/user/update-phone
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "phone": "9876543210"
+}
+
+### Update Profile Picture
+PUT {{baseUrl}}/api/user/update-profile-pic
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "profilePicUrl": "https://example.com/profile-pic.jpg"
+}
+
+###############################################################################
+### ADMIN ENDPOINTS
+###############################################################################
+
+### Freeze Account
+POST {{baseUrl}}/api/admin/freeze
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1
+}
+
+### Unfreeze Account
+POST {{baseUrl}}/api/admin/unfreeze
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1
+}
+
+###############################################################################
+### TESTING WORKFLOW
+###############################################################################
+
+### 1. Register and get token
+# @name register
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "test123",
+  "firstName": "Test",
+  "lastName": "User",
+  "phone": "5551234567"
+}
+
+### 2. Extract token from response
+# Save the token from the response above and replace {{token}} variable
+
+### 3. Open checking account
+POST {{baseUrl}}/api/accounts/open
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "type": "CHECKING",
+  "initialDeposit": 5000.00
+}
+
+### 4. Open savings account
+POST {{baseUrl}}/api/accounts/open
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "type": "SAVINGS",
+  "initialDeposit": 10000.00
+}
+
+### 5. View all accounts
+GET {{baseUrl}}/api/accounts
+Authorization: Bearer {{token}}
+
+### 6. Transfer money
+POST {{baseUrl}}/api/transfer
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fromAccountId": 1,
+  "toAccountId": 2,
+  "amount": 1000.00,
+  "description": "Test transfer"
+}
+
+### 7. View recent transactions
+GET {{baseUrl}}/api/transactions/recent?limit=20
+Authorization: Bearer {{token}}
+
+### 8. Set portfolio risk
+POST {{baseUrl}}/api/wealth/risk
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "riskScore": 4
+}
+
+### 9. Invest in portfolio
+POST {{baseUrl}}/api/wealth/invest
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 2000.00
+}
+
+### 10. View wealth portfolios
+GET {{baseUrl}}/api/wealth
+Authorization: Bearer {{token}}
