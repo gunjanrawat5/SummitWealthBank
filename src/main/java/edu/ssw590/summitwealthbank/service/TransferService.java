@@ -20,16 +20,42 @@ public class TransferService {
     private final AccountService accountService;
     private final TransactionRepository transactionRepository;
 
-    public Transaction transfer(TransferRequest request) {
+    public Transaction transfer(TransferRequest request, String email) {
+        // Validate request
+        if (request.getFromAccountId() == null || request.getToAccountId() == null) {
+            throw new IllegalArgumentException("Both source and destination accounts are required");
+        }
+
+        if (request.getAmount() == null || request.getAmount().signum() <= 0) {
+            throw new IllegalArgumentException("Transfer amount must be greater than zero");
+        }
+
+        if (request.getFromAccountId().equals(request.getToAccountId())) {
+            throw new IllegalArgumentException("Cannot transfer to the same account");
+        }
+
         Account from = accountService.getAccount(request.getFromAccountId());
         Account to = accountService.getAccount(request.getToAccountId());
 
-        if (from.isFrozen() || to.isFrozen()) {
-            throw new IllegalStateException("One or both accounts are frozen");
+        // Verify ownership - user must own the source account
+        List<Account> userAccounts = accountService.getAccountsByEmail(email);
+        boolean ownsFromAccount = userAccounts.stream()
+                .anyMatch(acc -> acc.getId().equals(from.getId()));
+
+        if (!ownsFromAccount) {
+            throw new SecurityException("You do not have permission to transfer from this account");
+        }
+
+        if (from.isFrozen()) {
+            throw new IllegalStateException("Source account is frozen. Please contact support.");
+        }
+
+        if (to.isFrozen()) {
+            throw new IllegalStateException("Destination account is frozen. Transfer cannot be completed.");
         }
 
         if (from.getBalance().compareTo(request.getAmount()) < 0) {
-            throw new IllegalArgumentException("Insufficient funds");
+            throw new IllegalArgumentException("Insufficient funds in source account");
         }
 
         from.setBalance(from.getBalance().subtract(request.getAmount()));
@@ -42,6 +68,7 @@ public class TransferService {
                 .fromAccountId(from.getId())
                 .toAccountId(to.getId())
                 .amount(request.getAmount())
+                .description(request.getDescription())
                 .timestamp(LocalDateTime.now())
                 .build();
 

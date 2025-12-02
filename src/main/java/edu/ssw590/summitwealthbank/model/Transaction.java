@@ -20,5 +20,6 @@ public class Transaction {
     private Long toAccountId;
 
     private BigDecimal amount;
+    private String description;
     private LocalDateTime timestamp;
 }
