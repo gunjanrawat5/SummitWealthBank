@@ -23,9 +23,6 @@ The frontend is under development with basic wiring planned, and security featur
 - Internal transfers between accounts
 - Validation for frozen status and sufficient balance
 
-### Card Feed
-- Periodic fake transactions to simulate card activity
-- Toy fraud rules applied for suspicious patterns
 
 ### Admin Ops
 - Simulated KYC freeze/unfreeze flag
