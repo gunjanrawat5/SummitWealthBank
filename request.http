@@ -75,6 +75,16 @@ Authorization: Bearer {{token}}
 GET {{baseUrl}}/api/accounts/by-email/user@example.com
 Authorization: Bearer {{token}}
 
+### Add Money to Savings Account (SAVINGS ONLY)
+POST {{baseUrl}}/api/accounts/deposit
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "amount": 1000.00
+}
+
 ###############################################################################
 ### TRANSFER & TRANSACTION ENDPOINTS
 ###############################################################################
@@ -295,4 +305,82 @@ Content-Type: application/json
 
 ### 10. View wealth portfolios
 GET {{baseUrl}}/api/wealth
+Authorization: Bearer {{token}}
+
+###############################################################################
+### STOCK TRADING ENDPOINTS
+###############################################################################
+
+### Get Available Stocks
+GET {{baseUrl}}/api/stocks/available
+Authorization: Bearer {{token}}
+
+### Get My Stock Portfolio
+GET {{baseUrl}}/api/stocks/portfolio
+Authorization: Bearer {{token}}
+
+### Buy Stock
+POST {{baseUrl}}/api/stocks/buy
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "stockSymbol": "AAPL",
+  "quantity": 10
+}
+
+### Sell Stock
+POST {{baseUrl}}/api/stocks/sell
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "accountId": 1,
+  "stockSymbol": "AAPL",
+  "quantity": 5
+}
+
+### Get Stock Transaction History
+GET {{baseUrl}}/api/stocks/transactions?limit=20
+Authorization: Bearer {{token}}
+
+### Get Transaction by Reference
+GET {{baseUrl}}/api/stocks/transactions/STK-20251202-ABC123
+Authorization: Bearer {{token}}
+
+###############################################################################
+### ADMIN STOCK MANAGEMENT ENDPOINTS
+###############################################################################
+
+### Create New Stock (Admin Only)
+POST {{baseUrl}}/api/admin/stocks/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "symbol": "AAPL",
+  "companyName": "Apple Inc.",
+  "currentPrice": 175.50,
+  "totalShares": 10000,
+  "sector": "Technology",
+  "description": "American multinational technology company"
+}
+
+### Update Stock Price (Admin Only)
+POST {{baseUrl}}/api/admin/stocks/update-price
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "symbol": "AAPL",
+  "newPrice": 180.25
+}
+
+### Get All Stocks (Admin Only)
+GET {{baseUrl}}/api/admin/stocks
+Authorization: Bearer {{token}}
+
+### Delete Stock (Admin Only)
+DELETE {{baseUrl}}/api/admin/stocks/AAPL
 Authorization: Bearer {{token}}

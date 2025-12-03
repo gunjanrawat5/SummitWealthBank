@@ -153,4 +153,12 @@ public class TransferService {
 
         return toTransactionResponse(transaction);
     }
+
+    // Admin method to get all transactions
+    public List<TransactionResponse> getAllTransactions(int limit) {
+        List<Transaction> transactions = transactionRepository.findAllRecent(PageRequest.of(0, limit));
+        return transactions.stream()
+                .map(this::toTransactionResponse)
+                .collect(Collectors.toList());
+    }
 }
