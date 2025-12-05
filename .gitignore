@@ -40,3 +40,18 @@ yarn-error.log*
 dist/
 .DS_Store
 *.local
+
+### Environment & Secrets ###
+.env
+.env.local
+.env.production
+application-local.properties
+application-prod.properties
+
+### Logs ###
+*.log
+logs/
+
+### OS ###
+.DS_Store
+Thumbs.db
