@@ -51,4 +51,32 @@ jobs:
             docker stop summit-postgres || true
             docker rm summit-postgres || true
 
-            docker
+            docker run -d \
+              --name summit-postgres \
+              --network summit-net \
+              -e POSTGRES_DB=summitbank \
+              -e POSTGRES_USER=summitbank \
+              -e POSTGRES_PASSWORD=ssw590 \
+              -v pgdata:/var/lib/postgresql/data \
+              postgres:16
+
+            # Login to Docker Hub inside EC2
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            # Pull latest backend image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest
+
+            # Stop & remove existing backend container
+            docker stop summit-backend || true
+            docker rm summit-backend || true
+
+            # Run new backend container
+            docker run -d \
+              --name summit-backend \
+              --network summit-net \
+              -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
+              ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest
+
+            echo "Deployment completed successfully."
