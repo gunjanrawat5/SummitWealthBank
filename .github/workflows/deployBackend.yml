@@ -1,0 +1,72 @@
+name: Build & Deploy Backend to EC2
+
+on:
+  push:
+    branches: [ main ]   # change if needed
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy on EC2 via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Ensure docker network exists
+            docker network create summit-net || true
+
+            # Ensure Postgres is running (unchanged if already there)
+            docker run -d \
+              --name summit-postgres \
+              --network summit-net \
+              -e POSTGRES_DB=summitdb \
+              -e POSTGRES_USER=summituser \
+              -e POSTGRES_PASSWORD=supersecret \
+              -v pgdata:/var/lib/postgresql/data \
+              postgres:16 || true
+
+            # Login to Docker Hub
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+            # Pull latest backend image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest
+
+            # Stop & remove old backend container
+            docker stop summit-backend || true
+            docker rm summit-backend || true
+
+            # Run new backend container on same network as DB
+            docker run -d \
+              --name summit-backend \
+              --network summit-net \
+              -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest
