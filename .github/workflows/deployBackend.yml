@@ -2,7 +2,9 @@ name: Build & Deploy Backend to EC2
 
 on:
   push:
-    branches: [ main ]   # change if needed
+    branches: [ main ]
+    paths:
+      - "backend/**"     # Only run when backend folder changes
 
 jobs:
   build-and-push:
@@ -40,33 +42,13 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "Starting backend deployment..."
+
             # Ensure docker network exists
             docker network create summit-net || true
 
-            # Ensure Postgres is running (unchanged if already there)
-            docker run -d \
-              --name summit-postgres \
-              --network summit-net \
-              -e POSTGRES_DB=summitdb \
-              -e POSTGRES_USER=summituser \
-              -e POSTGRES_PASSWORD=supersecret \
-              -v pgdata:/var/lib/postgresql/data \
-              postgres:16 || true
+            # Ensure Postgres container is running with correct credentials
+            docker stop summit-postgres || true
+            docker rm summit-postgres || true
 
-            # Login to Docker Hub
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
-            # Pull latest backend image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest
-
-            # Stop & remove old backend container
-            docker stop summit-backend || true
-            docker rm summit-backend || true
-
-            # Run new backend container on same network as DB
-            docker run -d \
-              --name summit-backend \
-              --network summit-net \
-              -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              ${{ secrets.DOCKER_USERNAME }}/summit-backend:latest
+            docker

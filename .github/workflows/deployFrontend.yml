@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main   # or whatever branch you use
+    paths:
+      - "summit-frontend/**"     # Only run when frontend folder changes
+
 
 jobs:
   build-and-deploy:
